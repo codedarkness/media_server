@@ -25,9 +25,8 @@ install_transmission() {
 	echo ""
 	echo " Installing transmission"
 	sleep 2;
-	sudo add-apt-repository ppa:transmissionbt/ppa;
-	sudo apt update;
-	sudo apt install -y transmission-cli transmission-common transmission-deamon;
+	sudo apt install -y transmission-cli transmission-common transmission-daemon &&
+	echo " Installations Done" || echo " Holly... something happend"
 }
 
 edit_transmission_automatic() {
@@ -35,37 +34,53 @@ edit_transmission_automatic() {
 	echo " Configure transmission"
 	echo ""
 	echo " Follow the instructios to setup your transmission"
-	sleep 2;
+	sleep 1;
 
+	echo " Stopting Transmission-daemon"
 	sudo service transmission-daemon stop;
+	echo ""
 
-	read -p " User name to connect to transsmission : " choice;
-	sudo sed 's/"rpc-username": ".*",/"rpc-username": "'$choice'",/g' /etc/transmission-deamon/settings.json &&
+	read -p " Transmission user-name : " choice;
+	sudo sed -i 's/"rpc-username": ".*"/"rpc-username": "'$choice'"/g' /etc/transmission-daemon/settings.json &&
 	echo " The user name has been added" || echo " Did you broke somthing!"
 	echo ""
 
-	read -p " Password to connect to transmission : " choice;
-	sudo sed 's/"rpc-password": ".*"/"rpc-password": "'$choice'",/g' /etc/transmission-deamon/settings.json &&
+	read -p " Transmission password : " choice;
+	sudo sed -i 's/"rpc-password": ".*"/"rpc-password": "'$choice'"/g' /etc/transmission-daemon/settings.json &&
 	echo " Password has ben setup" || echo " Something whent wrong!"
 	echo ""
 
-	read -p " Which is the full path of your download directory : " choice;
-	sudo sed 's/"download-dir": ".*",/"download-dir": "'$choice'",/g' /etc/transmission-deamon/settings.json &&
-	sudo sed 's/"incomplete-dir": ".*",/"incomplete-dir": "'$choice'",/g' /etc/transmission-deamon/settings.json &&
-	sudo sed 's/"incomplete-dir-enabled": false,/"incomplete-dir-enables": true,/g' /etc/transmission-deamon/settings.json &&
+	read -p " Full path for downloads : " choice;
+	sudo sed -i 's+"download-dir": ".*"+"download-dir": "'$choice'"+g' /etc/transmission-daemon/settings.json &&
+	echo " Download dir has been changed" || echo " Something whent wrong!"
+	echo ""
+
+	read -p " Full path for incomplete downloads : " choice;
+	sudo sed -i 's+"incomplete-dir": ".*"+"incomplete-dir": "'$choice'"+g' /etc/transmission-daemon/settings.json &&
+	echo " Incompre downloads has been changed" || echo " Something whent wrong!"
+	echo ""
+
+	sudo sed -i 's/"incomplete-dir-enabled": false/"incomplete-dir-enabled": true/g' /etc/transmission-daemon/settings.json &&
 	echo " The path has been setup" || echo " Upsss!"
 	echo ""
 
-	read -p " Which is the IP address of your local computer : " choice;
-	sudo sed 's/"rpc-whitelist": "127.0.0.1",/"rpc-whitelist": "127.0.0.1,"'$choice'",/g' /etc/transmission-deamon/settings.json &&
-	sudo sed 's/"umas": 12,/"umask": 2,/g' /etc/transmission-deamon/settings.json
+	read -p " Allow IP address to connect to transmission (192.168.*.*) : " choice;
+	sudo sed -i 's/"rpc-whitelist": ".*"/"rpc-whitelist": "127.0.0.1,'$choice'"/g' /etc/transmission-daemon/settings.json &&
+	echo " IP address has been setup" || echo " Huston we have a problem!"
+
+	sudo sed -i 's/"umask": .*/"umask": 2,/g' /etc/transmission-daemon/settings.json &&
+	echo " umas was setup to parameter 2" || echo " We have a glitch in the matrix"
 	echo ""
 
 	read -p " Server user name : " choice;
 	sudo usermod -a -G debian-transmission $choice;
 	echo " The user $choice has been added to debian-transmission group"
+	echo ""
 
-	sudo service trasmission-daemon start
+	sudo service transmission-daemon start &&
+	echo " Transmission has been setup!"
+	echo ""
+
 }
 
 edit_transmission_manual() {
@@ -80,20 +95,24 @@ edit_transmission_manual() {
 	echo " incomplete-dir: /path/to/incomplete/folder"
 	echo " incomplete-dir-enabled: true"
 	echo " umask 2"
-	sleep 2;
+	sleep 1;
 	echo ""
 	while true; do
-		read -p " Do you want to continuo : " yn
+		read -p " Edit transmission settings.json [y - n] : " yn
 		case $yn in
 			[Yy]* )
-				sudo service transmission-deamon stop;
-				sudo vim /etc/transmission-daemon/settings.json
-				sudo service transmission-deamon start
+				sudo service transmission-daemon stop;
+				sudo vim /etc/transmission-daemon/settings.json ;
+				sudo service transmission-daemon start; exit 0 ;;
 			[Nn]* )
-				funcion ; exit 0 ;;
+				echo " Bye!!" ; exit 0 ;;
 			* ) echo "Please answer yes or no." ;;
 		esac
 	done
+}
+
+readme() {
+	less config-files/txt/transmission
 }
 
 press_enter() {
@@ -132,9 +151,9 @@ until [ "$selection" = "0" ]; do
 
 	case $selection in
 		1) clear; install_transmission ; press_enter ;;
-		2) clear; edit_transmission    ; press_enter ;;
-		3) clear; Name/Options ; press_enter ;;
-		4) clear; Name/Options ; press_enter ;;
+		2) clear; edit_transmission_automatic ; press_enter ;;
+		3) clear; edit_transmission_manual ; press_enter ;;
+		4) clear; readme ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac

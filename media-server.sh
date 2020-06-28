@@ -22,7 +22,7 @@
 #
 # -----------------------------------------------------------------
 
-torrent_box() {
+torrent_server() {
 	config-files/torrent_server.sh
 }
 
@@ -34,10 +34,28 @@ vpn() {
 	config-files/vpn.sh
 }
 
-update_system() {
+first_install() {
+	echo ""
 	echo " Getting ready to update the system"
 	sleep 2;
-	sudo apt update && sudo apt dist-upgrade -y
+	echo ""
+	echo " This installation/update is for a new and fresh install"
+	echo " of your media server (debian-based system)"
+
+	while true; do
+		read -p " Install/update system [y - n] : " yn
+		case $yn in
+			[Yy]* )
+				sudo apt update && sudo apt dist-upgrade -y && sudo apt install -y curl gnupg gnupg2 gnupg1 apt-transport-https ranger htop vim ;;
+			[Nn]* )
+				funcion ; exit 0 ;;
+			* ) echo "Please answer yes or no." ;;
+		esac
+	done
+}
+
+server_configs() {
+	config-files/configs.sh
 }
 
 press_enter() {
@@ -69,7 +87,7 @@ until [ "$selection" = "0" ]; do
 	echo " 2 - Plex Media Server"
 	echo " 3 - VPN"
 	echo " 4 - Torrent Remote (local machine)"
-	echo " 5 - Update System"
+	echo " 5 - First Install (for new server installation)"
 	echo " 0 - Exit"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
@@ -77,11 +95,12 @@ until [ "$selection" = "0" ]; do
 	echo ""
 
 	case $selection in
-		1) clear; torrent_box  ;;
-		2) clear; plex_server  ;;
-		3) clear; vpn          ;;
-		4) clear; torren_remote;;
-		5) clear; update_system ; press_enter ;;
+		1) clear; torrent_server  ;;
+		2) clear; plex_server     ;;
+		3) clear; vpn             ;;
+		4) clear; torren_remote   ;;
+		5) clear; first_install   ;;
+		6) clear; server_configs  ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac

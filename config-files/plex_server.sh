@@ -27,8 +27,13 @@ plex_server() {
 	sleep 2;
 	echo " Importing repository's GPG Key"
 
-	echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list &&
-	curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -
+	echo deb https://downloads.plex.tv/repo/deb/ public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list &&
+	echo " GPG Key has imported" || echo " We have a problem in the matrix!"
+	echo ""
+
+	wget -q https://downloads.plex.tv/plex-keys/PlexSign.key -O - | sudo apt-key add - &&
+	#curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add - &&
+	echo " Plex Key has been added" || echo " Did you broke something"
 	echo ""
 
 	echo " Update Repositories"
@@ -47,13 +52,51 @@ plex_server() {
 	echo " Test your new plex server; open the web browser and type https://$IP:32400/web"
 }
 
-open_plex() {
+plex_server_deb() {
+	echo ""
+	echo " Download and Installing Plex (.deb)"
+	sleep 2;
+	echo ""
+
+	echo " Download deb pakage"
+	wget https://downloads.plex.tv/plex-media-server-new/1.19.4.2935-79e214ead/debian/plexmediaserver_1.19.4.2935-79e214ead_amd64.deb &&
+	echo " Download Done" || echo " Houston we have a problem!"
+	echo ""
+
+	echo " Installing Plex (.deb)"
+	sudo dpkg -i plexmediaserver_1.19.4.2935-79e214ead_amd64.deb &&
+	echo " Installation complete" || echo " Did you brake something!"
+
+	echo " Checking source list"
+	dpkg -L plexmediaserver &&
+	echo " Source list is present" || echo " Uppsss"
+	echo ""
+
+	while true; do
+		read -p " Edit plexmediaserver.list [y - n] : " yn
+		case $yn in
+			[Yy]* )
+				sudo vim /etc/apt/sources.list.d/plexmediaserver.list ;;
+			[Nn]* )
+				funcion ; exit 0 ;;
+			* ) echo "Please answer yes or no." ;;
+		esac
+	done
+
+	echo " Adding Plex Key"
+	wget -q https://downloads.plex.tv/plex-keys/PlexSign.key -O - | sudo apt-key add - &&
+	echo " Plex Key has been added" || echo " Did you brake something"
+	echo ""
+
+	sudo apt update &&
+	echo " Everything looks good" || echo " Upsssss!"
+
 	IP=$(hostname -I)
-	xdg-open https://$IP:32400/web
+	echo " Test your new plex server; open the web browser and type https://$IP:32400/web"
 }
 
 readme() {
-
+	less config-files/txt/plexmediaserver
 }
 
 press_enter() {
@@ -81,8 +124,8 @@ until [ "$selection" = "0" ]; do
 	echo " Install Plex Media Server in Debian-Based Systems"
 	echo ""
 	echo " 1 - Install Plex Server"
-	echo " 2 - Open Plex (web browser)"
-	echo " 3 - Name/Options"
+	echo " 2 - Install Plex Server .deb"
+	echo " 3 - Readme"
 	echo " 0 - Exit"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
@@ -90,9 +133,9 @@ until [ "$selection" = "0" ]; do
 	echo ""
 
 	case $selection in
-		1) clear; plex_server ; press_enter ;;
-		2) clear; open_plex   ; press_enter ;;
-		3) clear; readme      ; press_enter ;;
+		1) clear; plex_server     ; press_enter ;;
+		2) clear; plex_server_deb ; press_enter ;;
+		3) clear; readme ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac
