@@ -35,26 +35,6 @@ vpn() {
 }
 
 first_install() {
-	echo ""
-	echo " Getting ready to update the system"
-	sleep 2;
-	echo ""
-	echo " This installation/update is for a new and fresh install"
-	echo " of your media server (debian-based system)"
-
-	while true; do
-		read -p " Install/update system [y - n] : " yn
-		case $yn in
-			[Yy]* )
-				sudo apt update && sudo apt dist-upgrade -y && sudo apt install -y curl gnupg gnupg2 gnupg1 apt-transport-https ranger htop vim ;;
-			[Nn]* )
-				funcion ; exit 0 ;;
-			* ) echo "Please answer yes or no." ;;
-		esac
-	done
-}
-
-server_configs() {
 	config-files/configs.sh
 }
 
