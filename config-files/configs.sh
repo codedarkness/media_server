@@ -46,17 +46,28 @@ wpa_supplicant() {
 	echo " Setup Wifi"
 	sleep 1;
 
-	sudo apt-get install wpasupplicant &&
+	sudo apt-get install -y wpasupplicant &&
 	echo " wpa_supplicant was installed" || echo " We have a problem!"
 	echo ""
 
-	echo " Edit wpa_supplicant.conf"
-	sleep 1;
-	cat config-files/txt/wpasupplicant >> sudo /etc/wpa_supplicant/wpa_supplicant.conf &&
-	echo " Make all the necessary changes to fit your configuration" || echo " Upsss!"
+	while true; do
+		read -p " Edit wpa_supplicant.conf [y - n] : " yn
+		case $yn in
+			[Yy]* )
+				cat config-files/txt/wpasupplicant.txt | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf &&
+				echo " Make all the necessary changes to fit your configuration" || echo " Upsss!" ;
 
-	sleep 1;
-	sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
+				sleep 2;
+
+				sudo vim /etc/wpa_supplicant/wpa_supplicant.conf ;;
+			[Nn]* )
+				funcion ; exit 0 ;;
+			* ) echo "Please answer yes or no." ;;
+		esac
+	done
+
+
+	echo " Is recomend to restart you computer/server"
 }
 
 static_ip_address() {
@@ -64,23 +75,12 @@ static_ip_address() {
 	echo " Setup an static ip address"
 	sleep 1;
 
-	cat config-files/txt/staticip >> sudo /etc/network/interfaces &&
+	cat config-files/txt/staticip.txt | sudo tee -a /etc/network/interfaces &&
 	echo " Make all necessary changes to fit your configuration" || echo " Holy... Something is wrong!"
 
-	while true; do
-		read -p " Setup an static ip address [y - n] : " yn
-		case $yn in
-			[Yy]* )
-				sudo vim /etc/network/interfaces ;;
-			[Nn]* )
-				exit ;;
-			* ) echo "Please answer yes or no." ;;
-		esac
-	done
+	sudo vim /etc/network/interfaces
 
 	sudo systemctl restart networking && echo " Done!" || echo " Upssss"
-
-
 }
 
 press_enter() {

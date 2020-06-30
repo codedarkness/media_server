@@ -1,0 +1,14 @@
+# Network Adapter wire network
+#auto eth0
+#iface eth0 inet static
+#address 10.1.1.30
+#netmask 255.255.255.0
+#gateway 10.1.1.1
+
+# Wifi adapter wireless network
+#allow-hotplug wlan0
+#iface wlan0 inet static
+#address 10.1.1.31
+#netmask 255.255.255.0
+#gateway 10.1.1.1
+#wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf

@@ -30,6 +30,10 @@ plex_server() {
 	config-files/plex_server.sh
 }
 
+samba_server() {
+	config-files/samba_server.sh
+}
+
 vpn() {
 	config-files/vpn.sh
 }
@@ -65,8 +69,8 @@ until [ "$selection" = "0" ]; do
 	echo ""
 	echo " 1 - Torrent Box"
 	echo " 2 - Plex Media Server"
-	echo " 3 - VPN"
-	echo " 4 - Torrent Remote (local machine)"
+	echo " 3 - Samba (file sharing)"
+	echo " 4 - VPN"
 	echo " 5 - First Install (for new server installation)"
 	echo " 0 - Exit"
 	echo ""
@@ -77,10 +81,9 @@ until [ "$selection" = "0" ]; do
 	case $selection in
 		1) clear; torrent_server  ;;
 		2) clear; plex_server     ;;
-		3) clear; vpn             ;;
-		4) clear; torren_remote   ;;
+		3) clear; samba_server    ;;
+		4) clear; vpn             ;;
 		5) clear; first_install   ;;
-		6) clear; server_configs  ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac
