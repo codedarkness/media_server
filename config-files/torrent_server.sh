@@ -25,13 +25,13 @@ install_transmission() {
 	echo ""
 	echo " Installing transmission"
 	sleep 2;
-	sudo apt install -y transmission-cli transmission-common transmission-daemon &&
+	sudo apt install -y transmission-cli transmission-common transmission-daemon transmission-remote-cli &&
 	echo " Installations Done" || echo " Holly... something happend"
 }
 
-edit_transmission_automatic() {
+setup_transmission_password() {
 	echo ""
-	echo " Configure transmission"
+	echo " Setup Transmission with username and password"
 	echo ""
 	echo " Follow the instructios to setup your transmission"
 	sleep 1;
@@ -39,6 +39,74 @@ edit_transmission_automatic() {
 	echo " Stopting Transmission-daemon"
 	sudo service transmission-daemon stop;
 	echo ""
+
+	read -p " Transmission user-name : " choice;
+	sudo sed -i 's/"rpc-username": ".*"/"rpc-username": "'$choice'"/g' /etc/transmission-daemon/settings.json &&
+	echo " The user name has been added" || echo " Did you broke somthing!"
+	echo ""
+
+	read -p " Transmission password : " choice;
+	sudo sed -i 's/"rpc-password": ".*"/"rpc-password": "'$choice'"/g' /etc/transmission-daemon/settings.json &&
+	echo " Password has ben setup" || echo " Something whent wrong!"
+	echo ""
+
+	while true; do
+		read -p " Authenticacion is setup to true (defaul) do you like to disable : " yn
+		case $yn in
+			[Yy]* )
+				sudo sed -i 's/"rpc-authentication-required": true,/"rpc-authentication-required": false,/g' /etc/transmission-daemon/settings.json &&
+				echo " Autentication has been disable" || echo " Holy... Something is broken!" ; exit ;;
+			[Nn]* )
+				exit ;;
+			* ) echo "Please answer yes or no." ;;
+		esac
+	done
+
+	read -p " Full path for downloads : " choice;
+	sudo sed -i 's+"download-dir": ".*"+"download-dir": "'$choice'"+g' /etc/transmission-daemon/settings.json &&
+	echo " Download dir has been changed" || echo " Something whent wrong!"
+	echo ""
+
+	read -p " Full path for incomplete downloads : " choice;
+	sudo sed -i 's+"incomplete-dir": ".*"+"incomplete-dir": "'$choice'"+g' /etc/transmission-daemon/settings.json &&
+	echo " Incompre downloads has been changed" || echo " Something whent wrong!"
+	echo ""
+
+	sudo sed -i 's/"incomplete-dir-enabled": false/"incomplete-dir-enabled": true/g' /etc/transmission-daemon/settings.json &&
+	echo " The path has been setup" || echo " Upsss!"
+	echo ""
+
+	read -p " Allow IP address to connect to transmission (192.168.*.*) : " choice;
+	sudo sed -i 's/"rpc-whitelist": ".*"/"rpc-whitelist": "127.0.0.1,'$choice'"/g' /etc/transmission-daemon/settings.json &&
+	echo " IP address has been setup" || echo " Huston we have a problem!"
+
+	sudo sed -i 's/"umask": .*/"umask": 2,/g' /etc/transmission-daemon/settings.json &&
+	echo " umas was setup to parameter 2" || echo " We have a glitch in the matrix"
+	echo ""
+
+	read -p " Server user name : " choice;
+	sudo usermod -a -G debian-transmission $choice &&
+	echo " The user $choice has been added to debian-transmission group" || echo " We have a problem"
+	echo ""
+
+	sudo service transmission-daemon start &&
+	echo " Transmission has been setup!"
+	echo ""
+
+}
+
+setup_transmission_passwordless() {
+	echo ""
+	echo " Setup Transmission passwordlees"
+	echo ""
+	echo " Follow the instructios to setup your transmission"
+	sleep 1;
+
+	echo " Stopting Transmission-daemon"
+	sudo service transmission-daemon stop;
+	echo ""
+
+	#"rpc-authentication-required": true,
 
 	read -p " Transmission user-name : " choice;
 	sudo sed -i 's/"rpc-username": ".*"/"rpc-username": "'$choice'"/g' /etc/transmission-daemon/settings.json &&
@@ -73,17 +141,16 @@ edit_transmission_automatic() {
 	echo ""
 
 	read -p " Server user name : " choice;
-	sudo usermod -a -G debian-transmission $choice;
-	echo " The user $choice has been added to debian-transmission group"
+	sudo usermod -a -G debian-transmission $choice &&
+	echo " The user $choice has been added to debian-transmission group" || echo " We have a problem"
 	echo ""
 
 	sudo service transmission-daemon start &&
 	echo " Transmission has been setup!"
 	echo ""
-
 }
 
-edit_transmission_manual() {
+setup_transmission_manually() {
 	echo ""
 	echo " Manual configurations of transmission"
 	echo ""
@@ -103,16 +170,12 @@ edit_transmission_manual() {
 			[Yy]* )
 				sudo service transmission-daemon stop;
 				sudo vim /etc/transmission-daemon/settings.json ;
-				sudo service transmission-daemon start; exit 0 ;;
+				sudo service transmission-daemon start; exit ;;
 			[Nn]* )
-				echo " Bye!!" ; exit 0 ;;
+				echo " Bye!!" ; exit ;;
 			* ) echo "Please answer yes or no." ;;
 		esac
 	done
-}
-
-readme() {
-	less config-files/txt/transmission
 }
 
 press_enter() {
@@ -140,9 +203,9 @@ until [ "$selection" = "0" ]; do
 	echo " Setup a torrent box and install a remote control for torrents"
 	echo ""
 	echo " 1 - Install Transmission"
-	echo " 2 - Edit config.json automatic"
-	echo " 3 - Edit config.json manually"
-	echo " 4 - Readme"
+	echo " 2 - Setup Transmission (username and password)"
+	echo " 2 - Setup Transmission (passwordless)"
+	echo " 3 - Setup Transmission (manually)"
 	echo " 0 - Exit"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
@@ -150,10 +213,10 @@ until [ "$selection" = "0" ]; do
 	echo ""
 
 	case $selection in
-		1) clear; install_transmission ; press_enter ;;
-		2) clear; edit_transmission_automatic ; press_enter ;;
-		3) clear; edit_transmission_manual ; press_enter ;;
-		4) clear; readme ;;
+		1) clear; install_transmission            ; press_enter ;;
+		2) clear; setup_transmission_password     ; press_enter ;;
+		3) clear; setup_transmission_passwordless ; press_enter ;;
+		4) clear; setup_transmission_manually    ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac

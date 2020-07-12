@@ -1,6 +1,6 @@
-#ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-#network={
-#	ssid="WIFI_NAME"
-#	psk="WIFI_PASS"
-#	key_mgmt=WPA-PSK
-#}
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+network={
+	ssid="WIFI_NAME"
+	psk="WIFI_PASS"
+	key_mgmt=WPA-PSK
+}

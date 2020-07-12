@@ -82,7 +82,6 @@ until [ "$selection" = "0" ]; do
 	echo ""
 	echo " 1 - Install Samba"
 	echo " 2 - Setup a share directory"
-	echo " 3 - Name/Options"
 	echo " 0 - Exit"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
@@ -92,7 +91,6 @@ until [ "$selection" = "0" ]; do
 	case $selection in
 		1) clear; install_samba ; press_enter ;;
 		2) clear; set_up_share  ; press_enter ;;
-		3) clear; Name/Options ; press_enter ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac

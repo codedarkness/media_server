@@ -33,7 +33,7 @@ first_install() {
 		read -p " Install/update system [y - n] : " yn
 		case $yn in
 			[Yy]* )
-				sudo apt update && sudo apt dist-upgrade -y && sudo apt install -y gnupg gnupg2 gnupg1 apt-transport-https ranger htop vim ;;
+				sudo apt update && sudo apt dist-upgrade -y && sudo apt install -y gnupg gnupg2 gnupg1 apt-transport-https ranger htop vim unzip curl rsync ; exit ;;
 			[Nn]* )
 				exit ;;
 			* ) echo "Please answer yes or no." ;;
@@ -59,14 +59,14 @@ wpa_supplicant() {
 
 				sleep 2;
 
-				sudo vim /etc/wpa_supplicant/wpa_supplicant.conf ;;
+				sudo vim /etc/wpa_supplicant/wpa_supplicant.conf; exit ;;
 			[Nn]* )
-				funcion ; exit 0 ;;
+				funcion ; exit ;;
 			* ) echo "Please answer yes or no." ;;
 		esac
 	done
 
-
+	echo ""
 	echo " Is recomend to restart you computer/server"
 }
 
@@ -112,7 +112,6 @@ until [ "$selection" = "0" ]; do
 	echo " 1 - First Install (new fresh installation)"
 	echo " 2 - Setup Wireless (wps_supplicant)"
 	echo " 3 - Static ip address"
-	echo " 4 - Name/Options"
 	echo " 0 - Exit"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
@@ -123,7 +122,6 @@ until [ "$selection" = "0" ]; do
 		1) clear; first_install     ;;
 		2) clear; wpa_supplicant    ;;
 		3) clear; static_ip_address ;;
-		4) clear; Name/Options ; press_enter ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac

@@ -76,9 +76,9 @@ plex_server_deb() {
 		read -p " Edit plexmediaserver.list [y - n] : " yn
 		case $yn in
 			[Yy]* )
-				sudo vim /etc/apt/sources.list.d/plexmediaserver.list ;;
+				sudo vim /etc/apt/sources.list.d/plexmediaserver.list; exit ;;
 			[Nn]* )
-				funcion ; exit 0 ;;
+				funcion ; exit ;;
 			* ) echo "Please answer yes or no." ;;
 		esac
 	done
@@ -93,10 +93,6 @@ plex_server_deb() {
 
 	IP=$(hostname -I)
 	echo " Test your new plex server; open the web browser and type https://$IP:32400/web"
-}
-
-readme() {
-	less config-files/txt/plexmediaserver
 }
 
 press_enter() {
@@ -125,7 +121,6 @@ until [ "$selection" = "0" ]; do
 	echo ""
 	echo " 1 - Install Plex Server"
 	echo " 2 - Install Plex Server .deb"
-	echo " 3 - Readme"
 	echo " 0 - Exit"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
@@ -135,7 +130,6 @@ until [ "$selection" = "0" ]; do
 	case $selection in
 		1) clear; plex_server     ; press_enter ;;
 		2) clear; plex_server_deb ; press_enter ;;
-		3) clear; readme ;;
 		0) clear; exit ;;
 		*) clear; incorrect_selection ; press_enter ;;
 	esac
