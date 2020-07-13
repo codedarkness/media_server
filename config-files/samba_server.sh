@@ -50,10 +50,16 @@ set_up_share() {
 	echo  " Sample share is ready, open file..." | echo " Upsss... something is wrong with you!"
 	echo ""
 
+	sleep 2;
 	sudo vim /etc/samba/smb.conf
+	echo ""
 
 	echo " Restarting samba service"
 	sudo service smbd restart
+	echo ""
+
+	sudo systemctl --no-pager status smbd
+	echo ""
 }
 
 press_enter() {
@@ -82,7 +88,8 @@ until [ "$selection" = "0" ]; do
 	echo ""
 	echo " 1 - Install Samba"
 	echo " 2 - Setup a share directory"
-	echo " 0 - Exit"
+	echo ""
+	echo " 0 - Back"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
 	read selection

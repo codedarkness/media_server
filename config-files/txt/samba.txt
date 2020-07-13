@@ -1,13 +1,15 @@
+
+
 ## My Share
-[share] (Name to show in your network)
-Comment = Shared folder (Short description of your folder)
-Path = /share (Path of your folder /XXX/XXX/XXX)
-Browseable = yes
-Writeable = yes
-Only guest = no
-Create mask = 0777
-Directory mask = 0777
-Public = yes
-Guest ok = yes
-Valid users = user_name
-Read only = no
+#[share] (Name to show in your network)
+#Comment = Shared folder (Short description of your folder)
+#Path = /share (Path of your folder /XXX/XXX/XXX)
+#Browseable = yes
+#Writeable = yes
+#Only guest = no
+#Create mask = 0777
+#Directory mask = 0777
+#Public = yes
+#Guest ok = yes
+#Valid users = user_name
+#Read only = no

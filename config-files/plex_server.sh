@@ -45,7 +45,7 @@ plex_server() {
 	echo ""
 
 	echo " Checking plex status"
-	sudo systemctl status plexmediaserver
+	sudo systemctl --no-pager status plexmediaserver
 	echo ""
 
 	IP=$(hostname -I)
@@ -91,6 +91,10 @@ plex_server_deb() {
 	sudo apt update &&
 	echo " Everything looks good" || echo " Upsssss!"
 
+	echo " Checking plex status"
+	sudo systemctl --no-pager status plexmediaserver
+	echo ""
+
 	IP=$(hostname -I)
 	echo " Test your new plex server; open the web browser and type https://$IP:32400/web"
 }
@@ -121,7 +125,8 @@ until [ "$selection" = "0" ]; do
 	echo ""
 	echo " 1 - Install Plex Server"
 	echo " 2 - Install Plex Server .deb"
-	echo " 0 - Exit"
+	echo ""
+	echo " 0 - Back"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
 	read selection

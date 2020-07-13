@@ -20,7 +20,7 @@ That's it you're ready to go!
 * Setup a static ip address
 * Install openVPN
 	* Setup openvpn with private internet access
-	* Setup openvpn with NordVPN
+	* Setup openvpn with NordVPN (sonner)
 
 Tested and full running in **Debian 10 (Buster)** it should work in **Ubuntu Server** as well.
 Also tested in a **Raspberry Pi 4** it should work whit **Raspberry Pi 3** as  well.

@@ -72,6 +72,7 @@ until [ "$selection" = "0" ]; do
 	echo " 3 - Samba (file sharing)"
 	echo " 4 - VPN"
 	echo " 5 - First Install (for new server installation)"
+	echo ""
 	echo " 0 - Exit"
 	echo ""
 	echo -n " Enter selection [1 - 0] : "
