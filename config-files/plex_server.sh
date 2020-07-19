@@ -76,9 +76,9 @@ plex_server_deb() {
 		read -p " Edit plexmediaserver.list [y - n] : " yn
 		case $yn in
 			[Yy]* )
-				sudo vim /etc/apt/sources.list.d/plexmediaserver.list; exit ;;
+				sudo vim /etc/apt/sources.list.d/plexmediaserver.list ;;
 			[Nn]* )
-				funcion ; exit ;;
+				break ;;
 			* ) echo "Please answer yes or no." ;;
 		esac
 	done
