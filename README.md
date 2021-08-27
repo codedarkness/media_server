@@ -24,3 +24,7 @@ That's it you're ready to go!
 
 Tested and full running in **Debian 10 (Buster)** it should work in **Ubuntu Server** as well.
 Also tested in a **Raspberry Pi 4** it should work whit **Raspberry Pi 3** as  well.
+
+#### Note
+
+New setting and options no testing yet ond **Debian 11 (Bullseye)**.

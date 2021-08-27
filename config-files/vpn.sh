@@ -5,7 +5,7 @@
 # | |_| | (_| | |  |   <| | | |  __/\__ \__ \ |__| (_) | (_| |  __/
 # |____/ \__,_|_|  |_|\_\_| |_|\___||___/___/\____\___/ \__,_|\___|
 # -----------------------------------------------------------------
-# https://darkncesscode.com
+# https://darkncesscode.xyz
 # https://github.com/codedarkness
 # -----------------------------------------------------------------
 #
@@ -16,7 +16,7 @@
 #              server
 #
 #      AUTHOR: DarknessCode
-#       EMAIL: admin@darknesscode.com
+#       EMAIL: achim@darknesscode.xyz
 #
 #     CREATED: 06-28-20 3:48
 #
@@ -38,13 +38,10 @@ setup_pia() {
 	echo ""
 	sleep 2;
 
-	echo " Copy new files"
-	sudo cp -i config-files/txt/pingtest.sh /usr/local/bin/ &&
-	echo " Ping test files has been copied" || echo " Upsss!"
-	echo ""
-
-	sudo cp -i config-files/txt/ovpnstart.sh /usr/local/bin/ &&
-	echo " Auto start files has been copied" || echo " Holy..."
+	echo " Copy new file"
+	sudo cp -i config-files/txt/openvpnauto /etc/init.d/ &&
+	sudo chmod +x /etc/init.d/openvpnauto &&
+	echo " New file has been copied" || echo " Upsss!"
 	echo ""
 
 	cd /etc/openvpn &&
@@ -64,7 +61,7 @@ setup_password() {
 	echo " Creating a pass.txt file"
 	echo ""
 	echo " Add usarname in line 1"
-       	echo " Add password in line 2"
+    echo " Add password in line 2"
 	sleep 2;
 	echo ""
 
@@ -79,6 +76,11 @@ setup_password() {
 		esac
 	done
 	echo ""
+
+	echo " Changing login.txt permission to 700"
+	sudo chmod 700 /etc/openvpn/pass.txt &&
+	echo " Permissions has been changed" || echo " Why we use Linux"
+	echo ""
 }
 
 setup_server() {
@@ -91,42 +93,26 @@ setup_server() {
 	sleep 2;
 
 	echo " Select the vpn server of you choice/region"
-	echo " Write the name of the server you like, but without extention"
+	echo " Write the name of the server you like, but without extension"
 	echo " and write it with capitals and blank spaces, like this:"
 	echo " US New York City or CA Montrial"
 	echo ""
 
-	read -p " vpn server to use : " choise;
-	sudo sed -i 's+auth-user-pass+auth-user-pass /etc/openvpn/pass.txt+g' /etc/openvpn/$choice.ovpn &&
-	sudo sed -i "s+/etc/openvpn/.*.ovpn+/etc/openvpn/$choice.ovpn/g" /usr/local/bin/ovpnstart.sh &&
+	echo " Testing ip address"
+	wget http://ipinfo.io/ip -qO - &&
+	echo " Everything looks good?"
+	echo ""
+
+	read -p " vpn server to use : " choice;
+	sudo sed -i "s+/etc/openvpn/.*.ovpn+/etc/openvpn/$choice.ovpn+g" /etc/init.d/openvpnauto &&
+	sudo update-rc.d openvpnauto defaults 98 &&
+	sudo service openvpnauto start &&
 	echo " the vpn server has been setup" || echo "Huston we have a problem!"
 	echo ""
-}
 
-cronjob() {
-	echo ""
-	echo " Creating cronjob"
-	echo " Add this to lines to the crontab"
-	echo ""
-	echo " @reboot /usr/local/bin/ovpnstart.sh"
-	echo " @hourly /usr/local/bin/pingtest.sh"
-	echo ""
-	echo " The fitst line will start our vnp at boot"
-	echo " The second line will check every hour if the vpn is runnin"
-	echo ""
-
-	while true; do
-		read -p " Add a cronjob [y - n] : " yn
-		case $yn in
-			[Yy]* )
-				sudo crontab -e;
-				echo " Now reboot your server/computer and check if everything works as spected"; break ;;
-			[Nn]* )
-				echo " Until next time"; break ;;
-			* ) echo "Please answer yes or no." ;;
-		esac
-	done
-
+	echo " Testing ip address"
+	wget http://ipinfo.io/ip -qO - &&
+	echo " Everything looks good?"
 	echo ""
 }
 
@@ -160,7 +146,6 @@ until [ "$selection" = "0" ]; do
 	echo " 2 - Copy/Download PIA files"
 	echo " 3 - User and password for PIA"
 	echo " 4 - Setup vpn server"
-	echo " 5 - Add a cronjob"
 	echo ""
 	echo " 0 - Back"
 	echo ""

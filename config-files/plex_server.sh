@@ -5,7 +5,7 @@
 # | |_| | (_| | |  |   <| | | |  __/\__ \__ \ |__| (_) | (_| |  __/
 # |____/ \__,_|_|  |_|\_\_| |_|\___||___/___/\____\___/ \__,_|\___|
 # -----------------------------------------------------------------
-# https://darkncesscode.com
+# https://darkncesscode.xyz
 # https://github.com/codedarkness
 # -----------------------------------------------------------------
 #
@@ -15,7 +15,7 @@
 # DESCRIPTION: install plex media server for a headless server
 #
 #      AUTHOR: DarknessCode
-#       EMAIL: admin@darknesscode.com
+#       EMAIL: achim@darknesscode.xyz
 #
 #     CREATED: 06-25-20 9:03
 #
@@ -59,12 +59,12 @@ plex_server_deb() {
 	echo ""
 
 	echo " Download deb pakage"
-	wget https://downloads.plex.tv/plex-media-server-new/1.19.4.2935-79e214ead/debian/plexmediaserver_1.19.4.2935-79e214ead_amd64.deb &&
+	wget https://downloads.plex.tv/plex-media-server-new/1.24.1.4931-1a38e63c6/debian/plexmediaserver_1.24.1.4931-1a38e63c6_amd64.deb &&
 	echo " Download Done" || echo " Houston we have a problem!"
 	echo ""
 
 	echo " Installing Plex (.deb)"
-	sudo dpkg -i plexmediaserver_1.19.4.2935-79e214ead_amd64.deb &&
+	sudo dpkg -i plexmediaserver_1.24.1.4931-1a38e63c6_amd64.deb &&
 	echo " Installation complete" || echo " Did you brake something!"
 
 	echo " Checking source list"
@@ -124,7 +124,7 @@ until [ "$selection" = "0" ]; do
 	echo " Install Plex Media Server in Debian-Based Systems"
 	echo ""
 	echo " 1 - Install Plex Server"
-	echo " 2 - Install Plex Server .deb"
+	echo " 2 - Install Plex Server .deb (Debian - Ubuntu)"
 	echo ""
 	echo " 0 - Back"
 	echo ""
