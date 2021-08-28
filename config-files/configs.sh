@@ -5,7 +5,7 @@
 # | |_| | (_| | |  |   <| | | |  __/\__ \__ \ |__| (_) | (_| |  __/
 # |____/ \__,_|_|  |_|\_\_| |_|\___||___/___/\____\___/ \__,_|\___|
 # -----------------------------------------------------------------
-# https://darkncesscode.com
+# https://darkncesscode.xyz
 # https://github.com/codedarkness
 # -----------------------------------------------------------------
 #
@@ -15,7 +15,7 @@
 # DESCRIPTION: make some configurations over your server
 #
 #      AUTHOR: Darknesscode
-#       EMAIL: admin@darknesscode.com
+#       EMAIL: achim@darknesscode.xyz
 #
 #     CREATED: 06-28-20 3:56
 #
