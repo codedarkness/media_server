@@ -33,7 +33,7 @@ first_install() {
 		read -p " Install/update system [y - n] : " yn
 		case $yn in
 			[Yy]* )
-				sudo apt update && sudo apt dist-upgrade -y && sudo apt install -y gnupg gnupg2 gnupg1 apt-transport-https ranger htop vim unzip curl rsync ; break ;;
+				sudo apt update && sudo apt dist-upgrade -y && sudo apt install -y gnupg gnupg2 gnupg1 apt-transport-https ranger htop vim unzip zip curl rsync ; break ;;
 			[Nn]* )
 				break ;;
 			* ) echo "Please answer yes or no." ;;
